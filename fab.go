@@ -1,3 +1,4 @@
+// Package fab shows your output fabulous!!
 package fab
 
 import (
@@ -7,11 +8,15 @@ import (
 	"regexp"
 )
 
+//
 const (
+	// Start an escape sequence
 	ESC = "\x1b["
+	// End the escape sequence
 	NND = "\x1b[0m"
 )
 
+// The Fabulous struct
 type Fab struct {
 	colors  []int
 	count   int
@@ -19,6 +24,7 @@ type Fab struct {
 	pattern string
 }
 
+// Initializes a new Fab with an optional custom color range
 func NewFab(c ...int) *Fab {
 	fab := &Fab{pattern: "%s%dm%c%s"}
 	if c == nil {
@@ -30,6 +36,8 @@ func NewFab(c ...int) *Fab {
 	return fab
 }
 
+// Initializes a new Fab with colors appropiate for terminals capable of
+// displaying 256 colors.
 func NewSuperFab() *Fab {
 	pi3 := math.Pi / 3
 
@@ -48,23 +56,25 @@ func NewSuperFab() *Fab {
 	return fab
 }
 
+// Paints a string with fabulous colors.
 func (f *Fab) Paint(s string) string {
 	if len(s) == 0 {
 		return ""
 	}
 	var r bytes.Buffer
 	for _, c := range s {
-		fmt.Fprintf(&r, f.pattern, ESC, f.NextColor(), c, NND)
+		fmt.Fprintf(&r, f.pattern, ESC, f.nextColor(), c, NND)
 	}
 	return r.String()
 }
 
-func (f *Fab) NextColor() int {
+func (f *Fab) nextColor() int {
 	color := f.colors[f.index%f.count]
 	f.index++
 	return color
 }
 
+// Gets a proper Fab for a provided terminal emulator.
 func GetFab(term string) *Fab {
 	p, _ := regexp.Compile(`^xterm|-256color$`)
 	if p.MatchString(term) {
