@@ -1,6 +1,7 @@
 package fab
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"regexp"
@@ -12,14 +13,14 @@ const (
 )
 
 type Fab struct {
-	colors []int
-	count int
-	index int
+	colors  []int
+	count   int
+	index   int
 	pattern string
 }
 
 func NewFab(c ...int) *Fab {
-	fab := &Fab{pattern: "%s%dm%s%s"}
+	fab := &Fab{pattern: "%s%dm%c%s"}
 	if c == nil {
 		fab.colors = []int{31, 32, 33, 34, 35, 36}
 	} else {
@@ -43,7 +44,7 @@ func NewSuperFab() *Fab {
 		colors = append(colors, 36*r+6*g+b+16)
 	}
 	fab := NewFab(colors...)
-	fab.pattern = "%s38;5;%dm%s%s"
+	fab.pattern = "%s38;5;%dm%c%s"
 	return fab
 }
 
@@ -51,17 +52,11 @@ func (f *Fab) Paint(s string) string {
 	if len(s) == 0 {
 		return ""
 	}
-	p, _ := regexp.Compile(`.`)
-	m := p.FindAllString(s, -1)
-	var r string
-	for _, c := range m {
-		r = fmt.Sprintf("%s%s", r, f.PaintChar(c))
+	var r bytes.Buffer
+	for _, c := range s {
+		fmt.Fprintf(&r, f.pattern, ESC, f.NextColor(), c, NND)
 	}
-	return r
-}
-
-func (f *Fab) PaintChar(c string) string {
-	return fmt.Sprintf(f.pattern, ESC, f.NextColor(), c, NND)
+	return r.String()
 }
 
 func (f *Fab) NextColor() int {

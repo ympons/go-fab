@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	fab := fab.NewFab()
+	fab := fab.NewSuperFab()
 	fmt.Println(fab.Paint("Making my outputs fabulous!!!"))
 }
