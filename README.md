@@ -1,7 +1,7 @@
 fab - Show your output fabulous!!
 =======================================
 
-Package `fab` was *heavily* by [!whatthejeff/fab](https://github.com/whatthejeff/fab).
+Package `fab` was *heavily* by [whatthejeff/fab](https://github.com/whatthejeff/fab).
 
 # Status
 
