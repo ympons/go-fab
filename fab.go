@@ -8,7 +8,6 @@ import (
 	"regexp"
 )
 
-//
 const (
 	// Start an escape sequence
 	ESC = "\x1b["
